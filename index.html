@@ -8,6 +8,10 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; }
+    </style>
 </head>
 <body>
     <div id="root"></div>
@@ -20,86 +24,106 @@
           
           const monthlyData = {
             'JUL': {
-              revenue: 32929.48,
-              grossProfit: -16337.16,
-              operatingExpenses: 78865.88,
-              operatingProfit: -95203.04,
-              netProfit: -95203.04,
-              grossMargin: -49.61,
-              operatingMargin: -289.11,
-              netMargin: -289.11,
-              currentRatio: 0.054,
-              quickRatio: 0.054,
-              debtToEquity: -113.44,
-              cashAtEnd: 40179.98,
-              operatingCashFlow: -19185.46,
-              investingCashFlow: -2522.40,
-              currentAssets: 40179.98,
-              currentLiabilities: 745373.37,
-              equity: -657070.03,
-              totalAssets: 88303.34
+              revenue: 32929.48, grossProfit: -16337.16, operatingExpenses: 78865.88,
+              operatingProfit: -95203.04, netProfit: -95203.04, grossMargin: -49.61,
+              operatingMargin: -289.11, netMargin: -289.11, currentRatio: 0.054,
+              quickRatio: 0.054, debtToEquity: -113.44, cashAtEnd: 40179.98,
+              operatingCashFlow: -19185.46, investingCashFlow: -2522.40,
+              currentAssets: 40179.98, currentLiabilities: 745373.37,
+              equity: -657070.03, totalAssets: 88303.34
             },
             'AUG': {
-              revenue: 40250.49,
-              grossProfit: 947.82,
-              operatingExpenses: 72394.19,
-              operatingProfit: -71446.37,
-              netProfit: -71446.37,
-              grossMargin: 2.35,
-              operatingMargin: -177.50,
-              netMargin: -177.50,
-              currentRatio: 0.061,
-              quickRatio: 0.061,
-              debtToEquity: -111.54,
-              cashAtEnd: 49865.32,
-              operatingCashFlow: -2114.45,
-              investingCashFlow: -841.04,
-              currentAssets: 49865.32,
-              currentLiabilities: 812553.83,
-              equity: -728516.40,
-              totalAssets: 84037.43
+              revenue: 40250.49, grossProfit: 947.82, operatingExpenses: 72394.19,
+              operatingProfit: -71446.37, netProfit: -71446.37, grossMargin: 2.35,
+              operatingMargin: -177.50, netMargin: -177.50, currentRatio: 0.061,
+              quickRatio: 0.061, debtToEquity: -111.54, cashAtEnd: 49865.32,
+              operatingCashFlow: -2114.45, investingCashFlow: -841.04,
+              currentAssets: 49865.32, currentLiabilities: 812553.83,
+              equity: -728516.40, totalAssets: 84037.43
             },
             'SEP': {
-              revenue: 45235.44,
-              grossProfit: -2857.84,
-              operatingExpenses: 44601.52,
-              operatingProfit: -47459.36,
-              netProfit: -47459.36,
-              grossMargin: -6.32,
-              operatingMargin: -104.92,
-              netMargin: -104.92,
-              currentRatio: 0.087,
-              quickRatio: 0.087,
-              debtToEquity: -109.36,
-              cashAtEnd: 73640.04,
-              operatingCashFlow: -14952.61,
-              investingCashFlow: -68.32,
-              currentAssets: 73640.04,
-              currentLiabilities: 848571.29,
-              equity: -775975.76,
-              totalAssets: 72595.53
+              revenue: 45235.44, grossProfit: -2857.84, operatingExpenses: 44601.52,
+              operatingProfit: -47459.36, netProfit: -47459.36, grossMargin: -6.32,
+              operatingMargin: -104.92, netMargin: -104.92, currentRatio: 0.087,
+              quickRatio: 0.087, debtToEquity: -109.36, cashAtEnd: 73640.04,
+              operatingCashFlow: -14952.61, investingCashFlow: -68.32,
+              currentAssets: 73640.04, currentLiabilities: 848571.29,
+              equity: -775975.76, totalAssets: 72595.53
             }
           };
 
           const currentData = monthlyData[selectedMonth];
           const cogs = currentData.revenue - currentData.grossProfit;
 
+          const incomeBreakdown = [
+            { label: 'Revenue', value: currentData.revenue, color: 'bg-emerald-500', percent: 100 },
+            { label: 'Cost of Goods Sold', value: cogs, color: 'bg-red-400', isDeduction: true, percent: (cogs / currentData.revenue) * 100 },
+            { label: 'Gross Profit', value: currentData.grossProfit, color: 'bg-blue-500', percent: currentData.grossMargin },
+            { label: 'Operating Expenses', value: currentData.operatingExpenses, color: 'bg-orange-400', isDeduction: true, percent: (currentData.operatingExpenses / currentData.revenue) * 100 },
+            { label: 'Operating Profit', value: currentData.operatingProfit, color: 'bg-purple-500', percent: currentData.operatingMargin },
+            { label: 'Net Profit', value: currentData.netProfit, color: 'bg-green-600', percent: currentData.netMargin }
+          ];
+
+          const burnData = [
+            { month: 'Apr', burn: 72000 },
+            { month: 'May', burn: 68000 },
+            { month: 'Jun', burn: 65000 },
+            { month: 'Jul', burn: 78865.88 },
+            { month: 'Aug', burn: 72394.19 },
+            { month: 'Sep', burn: 44601.52 }
+          ];
+
           const formatCurrency = (value) => {
             return new Intl.NumberFormat('en-GB', {
-              style: 'currency',
-              currency: 'GBP',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0
+              style: 'currency', currency: 'GBP',
+              minimumFractionDigits: 0, maximumFractionDigits: 0
             }).format(Math.abs(value));
           };
 
-          const formatPercent = (value) => {
-            return `${value.toFixed(1)}%`;
+          const formatPercent = (value) => `${value.toFixed(1)}%`;
+
+          const CircularGauge = ({ value, label, max = 100 }) => {
+            const isNegative = value < 0;
+            const displayValue = Math.abs(value);
+            const normalizedValue = Math.min(displayValue, max);
+            const percentage = (normalizedValue / max) * 100;
+            const circumference = 2 * Math.PI * 45;
+            const strokeDashoffset = circumference - (percentage / 100) * circumference;
+            
+            return (
+              <div className="flex flex-col items-center">
+                <div className="relative w-32 h-32">
+                  <svg viewBox="0 0 100 100" style={{transform: 'rotate(-90deg)'}}>
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" strokeWidth="8" />
+                    <circle cx="50" cy="50" r="45" fill="none" 
+                      stroke={isNegative ? "#ef4444" : "url(#gradient)"}
+                      strokeWidth="8" strokeDasharray={circumference}
+                      strokeDashoffset={strokeDashoffset} strokeLinecap="round"
+                      style={{transition: 'all 0.5s'}} />
+                    <defs>
+                      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#10b981" />
+                        <stop offset="50%" stopColor="#3b82f6" />
+                        <stop offset="100%" stopColor="#8b5cf6" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div style={{position: 'absolute', inset: 0, display: 'flex', 
+                    flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                    <span className={`text-2xl font-bold ${isNegative ? 'text-red-600' : 'text-gray-900'}`}>
+                      {isNegative ? '-' : ''}{formatPercent(displayValue)}
+                    </span>
+                    <span className="text-xs text-gray-500 mt-1">{label}</span>
+                  </div>
+                </div>
+              </div>
+            );
           };
 
           return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
               <div className="max-w-7xl mx-auto space-y-6">
+                
                 {/* Header */}
                 <div className="flex justify-between items-center">
                   <div>
@@ -107,11 +131,8 @@
                     <p className="text-sm text-gray-500 mt-1">Soul Studio Limited - London, UK</p>
                   </div>
                   <div className="flex items-center gap-4">
-                    <select 
-                      value={selectedMonth}
-                      onChange={(e) => setSelectedMonth(e.target.value)}
-                      className="px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm font-medium text-gray-700"
-                    >
+                    <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}
+                      className="px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm font-medium text-gray-700">
                       <option value="JUL">JUL 2025</option>
                       <option value="AUG">AUG 2025</option>
                       <option value="SEP">SEP 2025</option>
@@ -121,138 +142,251 @@
 
                 {/* Top Metrics */}
                 <div className="grid grid-cols-4 gap-4">
-                  <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                    <h3 className="text-xs font-semibold text-gray-600 mb-2">Revenue</h3>
-                    <p className="text-2xl font-bold text-gray-900">{formatCurrency(currentData.revenue)}</p>
-                    <div className="flex items-center gap-3 mt-3">
-                      <div>
-                        <p className="text-[10px] text-gray-500">Margin</p>
-                        <p className="text-sm font-semibold text-green-600">100%</p>
+                  {[
+                    {label: 'Revenue', value: currentData.revenue, margin: '100%', isPositive: true},
+                    {label: 'Gross Profit', value: currentData.grossProfit, margin: formatPercent(currentData.grossMargin), isPositive: currentData.grossProfit >= 0},
+                    {label: 'Operating Profit', value: currentData.operatingProfit, margin: formatPercent(currentData.operatingMargin), isPositive: currentData.operatingProfit >= 0},
+                    {label: 'Net Profit', value: currentData.netProfit, margin: formatPercent(currentData.netMargin), isPositive: currentData.netProfit >= 0}
+                  ].map((metric, idx) => (
+                    <div key={idx} className="bg-white rounded-xl shadow-md p-5 border border-gray-100 min-h-[140px] flex flex-col">
+                      <h3 className="text-xs font-semibold text-gray-600 mb-2">{metric.label}</h3>
+                      <p className={`text-2xl font-bold mb-auto ${metric.isPositive ? 'text-gray-900' : 'text-red-600'}`}>
+                        {metric.value < 0 ? '-' : ''}{formatCurrency(Math.abs(metric.value))}
+                      </p>
+                      <div className="flex items-center gap-3 mt-3">
+                        <div><p className="text-[10px] text-gray-500">Margin</p>
+                        <p className={`text-sm font-semibold ${metric.isPositive ? 'text-green-600' : 'text-red-600'}`}>{metric.margin}</p></div>
                       </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Margins and Income Statement */}
+                <div className="grid grid-cols-3 gap-4">
+                  
+                  {/* Margin Gauges */}
+                  <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-4">Profit Margins</h3>
+                    <div className="space-y-4">
+                      <CircularGauge value={currentData.grossMargin} label="Gross" max={100} />
+                      <CircularGauge value={currentData.operatingMargin} label="Operating" max={100} />
+                      <CircularGauge value={currentData.netMargin} label="Net" max={100} />
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                    <h3 className="text-xs font-semibold text-gray-600 mb-2">Gross Profit</h3>
-                    <p className={`text-2xl font-bold ${currentData.grossProfit >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
-                      {currentData.grossProfit >= 0 ? '' : '-'}{formatCurrency(Math.abs(currentData.grossProfit))}
-                    </p>
-                    <div className="flex items-center gap-3 mt-3">
-                      <div>
-                        <p className="text-[10px] text-gray-500">Margin</p>
-                        <p className={`text-sm font-semibold ${currentData.grossMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {formatPercent(currentData.grossMargin)}
-                        </p>
+                  {/* Income Statement */}
+                  <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100 col-span-2">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-1">Income Statement</h3>
+                    <p className="text-xs text-gray-500 mb-4">{selectedMonth} 2025</p>
+                    <div className="space-y-3">
+                      {incomeBreakdown.map((item, idx) => {
+                        const maxValue = currentData.revenue;
+                        const width = Math.abs(item.value / maxValue) * 100;
+                        return (
+                          <div key={idx} className="space-y-1">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-gray-700">{item.label}</span>
+                              <div className="flex items-center gap-3">
+                                <span className="text-xs font-semibold text-blue-600">
+                                  {item.value >= 0 ? '' : '-'}{formatPercent(Math.abs(item.percent))}
+                                </span>
+                                <span className="text-sm font-bold text-gray-900 w-20 text-right">
+                                  {item.isDeduction && '- '}{formatCurrency(item.value)}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="w-full bg-gray-100 rounded-full h-6 relative overflow-hidden">
+                              <div className={`${item.color} h-full rounded-full transition-all duration-500`}
+                                style={{width: `${width}%`}}></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Monthly Burn Rate */}
+                <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a6 6 0 00-6 6c0 4 6 10 6 10s6-6 6-10a6 6 0 00-6-6z"/>
+                      </svg>
+                      <h3 className="text-sm font-semibold text-gray-700">Monthly Burn Rate - Trend Analysis</h3>
+                    </div>
+                    <div className="text-xs text-gray-500">Last 6 Months</div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-lg p-6 mb-4">
+                    <div className="relative h-48">
+                      <svg width="100%" height="100%" style={{overflow: 'visible'}}>
+                        {[0, 25, 50, 75, 100].map((percent) => (
+                          <line key={percent} x1="5%" y1={`${percent}%`} x2="95%" y2={`${percent}%`}
+                            stroke="#e5e7eb" strokeWidth="1" strokeDasharray="4 2" />
+                        ))}
+                        
+                        <defs>
+                          <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
+                            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.05" />
+                          </linearGradient>
+                        </defs>
+                        
+                        <polygon fill="url(#areaGradient)"
+                          points={`${burnData.map((d, i) => {
+                            const maxBurn = Math.max(...burnData.map(d => d.burn));
+                            const minBurn = Math.min(...burnData.map(d => d.burn));
+                            const range = maxBurn - minBurn;
+                            const x = 5 + (i / (burnData.length - 1)) * 90;
+                            const y = 95 - ((d.burn - minBurn) / range) * 90;
+                            return `${x}%,${y}%`;
+                          }).join(' ')} 95%,95% 5%,95%`}
+                        />
+                        
+                        <polyline fill="none" stroke="#3b82f6" strokeWidth="3"
+                          strokeLinecap="round" strokeLinejoin="round"
+                          points={burnData.map((d, i) => {
+                            const maxBurn = Math.max(...burnData.map(d => d.burn));
+                            const minBurn = Math.min(...burnData.map(d => d.burn));
+                            const range = maxBurn - minBurn;
+                            const x = 5 + (i / (burnData.length - 1)) * 90;
+                            const y = 95 - ((d.burn - minBurn) / range) * 90;
+                            return `${x}%,${y}%`;
+                          }).join(' ')}
+                        />
+                        
+                        {burnData.map((d, i) => {
+                          const maxBurn = Math.max(...burnData.map(d => d.burn));
+                          const minBurn = Math.min(...burnData.map(d => d.burn));
+                          const range = maxBurn - minBurn;
+                          const x = 5 + (i / (burnData.length - 1)) * 90;
+                          const y = 95 - ((d.burn - minBurn) / range) * 90;
+                          const isSelected = d.month === selectedMonth.substring(0, 3);
+                          return (
+                            <g key={i}>
+                              <circle cx={`${x}%`} cy={`${y}%`} r={isSelected ? "7" : "5"}
+                                fill={isSelected ? "#f97316" : "#3b82f6"} stroke="white" strokeWidth="2" />
+                            </g>
+                          );
+                        })}
+                      </svg>
+                      
+                      <div className="flex justify-between mt-3 px-2">
+                        {burnData.map((item, idx) => {
+                          const isSelected = item.month === selectedMonth.substring(0, 3);
+                          return (
+                            <div key={idx} className="text-center">
+                              <span className={`text-xs font-semibold ${isSelected ? 'text-orange-600' : 'text-gray-600'}`}>
+                                {item.month}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
-
-                  <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                    <h3 className="text-xs font-semibold text-gray-600 mb-2">Operating Profit</h3>
-                    <p className={`text-2xl font-bold ${currentData.operatingProfit >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
-                      {currentData.operatingProfit >= 0 ? '' : '-'}{formatCurrency(Math.abs(currentData.operatingProfit))}
-                    </p>
-                    <div className="flex items-center gap-3 mt-3">
-                      <div>
-                        <p className="text-[10px] text-gray-500">Margin</p>
-                        <p className={`text-sm font-semibold ${currentData.operatingMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {formatPercent(currentData.operatingMargin)}
-                        </p>
-                      </div>
+                  
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <p className="text-xs text-blue-600 font-medium mb-1">Average Monthly Burn</p>
+                      <p className="text-xl font-bold text-blue-900">
+                        {formatCurrency(burnData.reduce((a, b) => a + b.burn, 0) / burnData.length)}
+                      </p>
+                    </div>
+                    <div className="bg-orange-50 rounded-lg p-4">
+                      <p className="text-xs text-orange-600 font-medium mb-1">Current Month Burn</p>
+                      <p className="text-xl font-bold text-orange-900">{formatCurrency(currentData.operatingExpenses)}</p>
+                    </div>
+                    <div className="bg-emerald-50 rounded-lg p-4">
+                      <p className="text-xs text-emerald-600 font-medium mb-1">Estimated Runway</p>
+                      <p className="text-xl font-bold text-red-900">
+                        {Math.floor(currentData.cashAtEnd / currentData.operatingExpenses)} months
+                      </p>
                     </div>
                   </div>
+                </div>
 
-                  <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                    <h3 className="text-xs font-semibold text-gray-600 mb-2">Net Profit</h3>
-                    <p className={`text-2xl font-bold ${currentData.netProfit >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
-                      {currentData.netProfit >= 0 ? '' : '-'}{formatCurrency(Math.abs(currentData.netProfit))}
-                    </p>
-                    <div className="flex items-center gap-3 mt-3">
-                      <div>
-                        <p className="text-[10px] text-gray-500">Margin</p>
-                        <p className={`text-sm font-semibold ${currentData.netMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {formatPercent(currentData.netMargin)}
-                        </p>
+                {/* Balance Sheet Ratios */}
+                <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-6">Balance Sheet Ratios & Snapshot</h3>
+                  
+                  <div className="grid grid-cols-4 gap-6">
+                    {[
+                      {label: 'Current Ratio', value: currentData.currentRatio.toFixed(3), target: '2.0', color: '#ef4444'},
+                      {label: 'Quick Ratio', value: currentData.quickRatio.toFixed(3), target: '1.5', color: '#ef4444'},
+                      {label: 'Debt-to-Equity', value: `${currentData.debtToEquity.toFixed(0)}%`, target: '50%', color: '#f97316'}
+                    ].map((ratio, idx) => (
+                      <div key={idx} className="text-center">
+                        <div className="relative w-24 h-24 mx-auto mb-3">
+                          <svg viewBox="0 0 100 100" style={{transform: 'rotate(-90deg)'}}>
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#e5e7eb" strokeWidth="8" />
+                            <circle cx="50" cy="50" r="40" fill="none" stroke={ratio.color} strokeWidth="8"
+                              strokeDasharray={`${(Math.abs(parseFloat(ratio.value)) / 2) * 251.2} 251.2`}
+                              strokeLinecap="round" />
+                          </svg>
+                          <div style={{position: 'absolute', inset: 0, display: 'flex', 
+                            alignItems: 'center', justifyContent: 'center'}}>
+                            <span className="text-lg font-bold text-red-600">{ratio.value}</span>
+                          </div>
+                        </div>
+                        <p className="text-xs font-semibold text-gray-700">{ratio.label}</p>
+                        <p className="text-xs text-red-500 mt-1">Critical: Target {ratio.target}</p>
+                      </div>
+                    ))}
+
+                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg p-4">
+                      <p className="text-xs font-semibold text-gray-600 mb-3">{selectedMonth} 2025 Snapshot</p>
+                      <div className="space-y-2 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Cash Balance</span>
+                          <span className={`font-bold ${currentData.currentAssets > 50000 ? 'text-blue-600' : 'text-orange-600'}`}>
+                            {formatCurrency(currentData.currentAssets)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Total Assets</span>
+                          <span className="font-bold text-gray-900">{formatCurrency(currentData.totalAssets)}</span>
+                        </div>
+                        <div className="flex justify-between pt-2 border-t border-gray-300">
+                          <span className="text-gray-600">Current Liabilities</span>
+                          <span className="font-bold text-red-600">{formatCurrency(currentData.currentLiabilities)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Total Equity</span>
+                          <span className="font-bold text-red-600">{formatCurrency(currentData.equity)}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Financial Summary */}
-                <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-4">September 2025 Financial Summary</h3>
-                  <div className="grid grid-cols-3 gap-6">
-                    <div>
-                      <p className="text-sm text-gray-600 mb-2">Profit Margins</p>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-xs text-gray-500">Gross Margin</span>
-                          <span className={`text-sm font-bold ${currentData.grossMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {formatPercent(currentData.grossMargin)}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs text-gray-500">Operating Margin</span>
-                          <span className={`text-sm font-bold ${currentData.operatingMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {formatPercent(currentData.operatingMargin)}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs text-gray-500">Net Margin</span>
-                          <span className={`text-sm font-bold ${currentData.netMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {formatPercent(currentData.netMargin)}
-                          </span>
-                        </div>
-                      </div>
+                {/* Cash Flow */}
+                <div className="grid grid-cols-4 gap-4">
+                  {[
+                    {label: 'Operating Cash Flow', value: currentData.operatingCashFlow, color: 'from-blue-500 to-blue-600'},
+                    {label: 'Financing Cash Flow', value: 0, color: 'from-purple-500 to-purple-600'},
+                    {label: 'Investing Cash Flow', value: currentData.investingCashFlow, color: 'from-pink-500 to-pink-600'},
+                    {label: 'Cash at Month End', value: currentData.cashAtEnd, color: 'from-emerald-500 to-emerald-600'}
+                  ].map((cf, idx) => (
+                    <div key={idx} className={`bg-gradient-to-br ${cf.color} rounded-xl shadow-lg p-6 text-white`}>
+                      <h3 className="text-sm font-semibold opacity-90 mb-2">{cf.label}</h3>
+                      <p className="text-3xl font-bold">
+                        {cf.value < 0 ? '-' : ''}{formatCurrency(Math.abs(cf.value))}
+                      </p>
+                      <p className="text-xs opacity-75 mt-2">
+                        {cf.value < 0 ? 'Outflow' : cf.value === 0 ? 'No Activity' : 'Available'}
+                      </p>
                     </div>
-                    
-                    <div>
-                      <p className="text-sm text-gray-600 mb-2">Balance Sheet</p>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-xs text-gray-500">Cash Balance</span>
-                          <span className="text-sm font-bold text-blue-600">{formatCurrency(currentData.cashAtEnd)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs text-gray-500">Current Ratio</span>
-                          <span className="text-sm font-bold text-red-600">{currentData.currentRatio.toFixed(3)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs text-gray-500">Total Equity</span>
-                          <span className="text-sm font-bold text-red-600">{formatCurrency(currentData.equity)}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm text-gray-600 mb-2">Cash Flow</p>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-xs text-gray-500">Operating CF</span>
-                          <span className="text-sm font-bold text-red-600">
-                            -{formatCurrency(Math.abs(currentData.operatingCashFlow))}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs text-gray-500">Burn Rate</span>
-                          <span className="text-sm font-bold text-orange-600">{formatCurrency(currentData.operatingExpenses)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs text-gray-500">Runway</span>
-                          <span className="text-sm font-bold text-red-600">
-                            {Math.floor(currentData.cashAtEnd / currentData.operatingExpenses)} months
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
                 {/* Footer */}
-                <div className="text-center text-xs text-gray-500 py-4">
+                <div className="text-center text-xs text-gray-500 py-4 border-t border-gray-200">
                   <p>Soul Studio Limited | Confidential Financial Dashboard</p>
                   <p className="mt-1">Generated: {new Date().toLocaleDateString()}</p>
                 </div>
+
               </div>
             </div>
           );
