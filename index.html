@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Studio - CFO Dashboard</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState } = React;
+        
+        const Dashboard = () => {
+          const [selectedMonth, setSelectedMonth] = useState('SEP');
+          
+          const monthlyData = {
+            'JUL': {
+              revenue: 32929.48,
+              grossProfit: -16337.16,
+              operatingExpenses: 78865.88,
+              operatingProfit: -95203.04,
+              netProfit: -95203.04,
+              grossMargin: -49.61,
+              operatingMargin: -289.11,
+              netMargin: -289.11,
+              currentRatio: 0.054,
+              quickRatio: 0.054,
+              debtToEquity: -113.44,
+              cashAtEnd: 40179.98,
+              operatingCashFlow: -19185.46,
+              investingCashFlow: -2522.40,
+              currentAssets: 40179.98,
+              currentLiabilities: 745373.37,
+              equity: -657070.03,
+              totalAssets: 88303.34
+            },
+            'AUG': {
+              revenue: 40250.49,
+              grossProfit: 947.82,
+              operatingExpenses: 72394.19,
+              operatingProfit: -71446.37,
+              netProfit: -71446.37,
+              grossMargin: 2.35,
+              operatingMargin: -177.50,
+              netMargin: -177.50,
+              currentRatio: 0.061,
+              quickRatio: 0.061,
+              debtToEquity: -111.54,
+              cashAtEnd: 49865.32,
+              operatingCashFlow: -2114.45,
+              investingCashFlow: -841.04,
+              currentAssets: 49865.32,
+              currentLiabilities: 812553.83,
+              equity: -728516.40,
+              totalAssets: 84037.43
+            },
+            'SEP': {
+              revenue: 45235.44,
+              grossProfit: -2857.84,
+              operatingExpenses: 44601.52,
+              operatingProfit: -47459.36,
+              netProfit: -47459.36,
+              grossMargin: -6.32,
+              operatingMargin: -104.92,
+              netMargin: -104.92,
+              currentRatio: 0.087,
+              quickRatio: 0.087,
+              debtToEquity: -109.36,
+              cashAtEnd: 73640.04,
+              operatingCashFlow: -14952.61,
+              investingCashFlow: -68.32,
+              currentAssets: 73640.04,
+              currentLiabilities: 848571.29,
+              equity: -775975.76,
+              totalAssets: 72595.53
+            }
+          };
+
+          const currentData = monthlyData[selectedMonth];
+          const cogs = currentData.revenue - currentData.grossProfit;
+
+          const formatCurrency = (value) => {
+            return new Intl.NumberFormat('en-GB', {
+              style: 'currency',
+              currency: 'GBP',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            }).format(Math.abs(value));
+          };
+
+          const formatPercent = (value) => {
+            return `${value.toFixed(1)}%`;
+          };
+
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+              <div className="max-w-7xl mx-auto space-y-6">
+                {/* Header */}
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900">CFO Dashboard</h1>
+                    <p className="text-sm text-gray-500 mt-1">Soul Studio Limited - London, UK</p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <select 
+                      value={selectedMonth}
+                      onChange={(e) => setSelectedMonth(e.target.value)}
+                      className="px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm font-medium text-gray-700"
+                    >
+                      <option value="JUL">JUL 2025</option>
+                      <option value="AUG">AUG 2025</option>
+                      <option value="SEP">SEP 2025</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Top Metrics */}
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 className="text-xs font-semibold text-gray-600 mb-2">Revenue</h3>
+                    <p className="text-2xl font-bold text-gray-900">{formatCurrency(currentData.revenue)}</p>
+                    <div className="flex items-center gap-3 mt-3">
+                      <div>
+                        <p className="text-[10px] text-gray-500">Margin</p>
+                        <p className="text-sm font-semibold text-green-600">100%</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 className="text-xs font-semibold text-gray-600 mb-2">Gross Profit</h3>
+                    <p className={`text-2xl font-bold ${currentData.grossProfit >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
+                      {currentData.grossProfit >= 0 ? '' : '-'}{formatCurrency(Math.abs(currentData.grossProfit))}
+                    </p>
+                    <div className="flex items-center gap-3 mt-3">
+                      <div>
+                        <p className="text-[10px] text-gray-500">Margin</p>
+                        <p className={`text-sm font-semibold ${currentData.grossMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {formatPercent(currentData.grossMargin)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 className="text-xs font-semibold text-gray-600 mb-2">Operating Profit</h3>
+                    <p className={`text-2xl font-bold ${currentData.operatingProfit >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
+                      {currentData.operatingProfit >= 0 ? '' : '-'}{formatCurrency(Math.abs(currentData.operatingProfit))}
+                    </p>
+                    <div className="flex items-center gap-3 mt-3">
+                      <div>
+                        <p className="text-[10px] text-gray-500">Margin</p>
+                        <p className={`text-sm font-semibold ${currentData.operatingMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {formatPercent(currentData.operatingMargin)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 className="text-xs font-semibold text-gray-600 mb-2">Net Profit</h3>
+                    <p className={`text-2xl font-bold ${currentData.netProfit >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
+                      {currentData.netProfit >= 0 ? '' : '-'}{formatCurrency(Math.abs(currentData.netProfit))}
+                    </p>
+                    <div className="flex items-center gap-3 mt-3">
+                      <div>
+                        <p className="text-[10px] text-gray-500">Margin</p>
+                        <p className={`text-sm font-semibold ${currentData.netMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {formatPercent(currentData.netMargin)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Financial Summary */}
+                <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-700 mb-4">September 2025 Financial Summary</h3>
+                  <div className="grid grid-cols-3 gap-6">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Profit Margins</p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-xs text-gray-500">Gross Margin</span>
+                          <span className={`text-sm font-bold ${currentData.grossMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {formatPercent(currentData.grossMargin)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs text-gray-500">Operating Margin</span>
+                          <span className={`text-sm font-bold ${currentData.operatingMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {formatPercent(currentData.operatingMargin)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs text-gray-500">Net Margin</span>
+                          <span className={`text-sm font-bold ${currentData.netMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {formatPercent(currentData.netMargin)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Balance Sheet</p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-xs text-gray-500">Cash Balance</span>
+                          <span className="text-sm font-bold text-blue-600">{formatCurrency(currentData.cashAtEnd)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs text-gray-500">Current Ratio</span>
+                          <span className="text-sm font-bold text-red-600">{currentData.currentRatio.toFixed(3)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs text-gray-500">Total Equity</span>
+                          <span className="text-sm font-bold text-red-600">{formatCurrency(currentData.equity)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Cash Flow</p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-xs text-gray-500">Operating CF</span>
+                          <span className="text-sm font-bold text-red-600">
+                            -{formatCurrency(Math.abs(currentData.operatingCashFlow))}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs text-gray-500">Burn Rate</span>
+                          <span className="text-sm font-bold text-orange-600">{formatCurrency(currentData.operatingExpenses)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs text-gray-500">Runway</span>
+                          <span className="text-sm font-bold text-red-600">
+                            {Math.floor(currentData.cashAtEnd / currentData.operatingExpenses)} months
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="text-center text-xs text-gray-500 py-4">
+                  <p>Soul Studio Limited | Confidential Financial Dashboard</p>
+                  <p className="mt-1">Generated: {new Date().toLocaleDateString()}</p>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        ReactDOM.render(<Dashboard />, document.getElementById('root'));
+    </script>
+</body>
+</html>
